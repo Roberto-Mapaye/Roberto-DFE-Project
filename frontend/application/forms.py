@@ -1,13 +1,14 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired
 
 class PlayerForm(FlaskForm):
-    first_name = StringField("First Name", validators=[DataRequired()])
-    second_name = StringField("Second Name", validators=[DataRequired()])
-    team = StringField("Team Name", validators=[DataRequired()])
-    submit = SubmitField("Add Task")
+    first_name = StringField(label="First Name", validators=[DataRequired()])
+    last_name = StringField(label="Last Name", validators=[DataRequired()])
+    # team = SelectField(label="Team Name", choices=[], validators=[DataRequired()])
+    submit = SubmitField("Add Player")
 
 class TeamForm(FlaskForm):
-    team_name = StringField("Team Name", validators=[DataRequired()])
-    submit = SubmitField("Add Task")
+    team_name = StringField(label="Team Name", validators=[DataRequired()])
+    game = SelectField(label="Main Game: ", choices=[('League of Legends','League of Legends'), ('DOTA', 'DOTA'), ('CS:GO', 'CS:GO'), ('Overwatch', 'Overwatch')], validators=[DataRequired()])
+    submit = SubmitField("Add Team")

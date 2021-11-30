@@ -1,0 +1,8 @@
+*.db
+venv/
+__pycache__/
+.coverage
+.pytest_cache
+.gitignore
+© 2021 GitHub, Inc.
+Terms
