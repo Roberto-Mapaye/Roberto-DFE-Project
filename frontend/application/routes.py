@@ -7,7 +7,7 @@ import requests
 @app.route('/home')
 def home():
     all_teams = requests.get("http://backend:5000/read/allTeams").json()
-    app.logger.info(f"Teams: {all_teams}")
+    # app.logger.info(f"Teams: {all_teams}")
     return render_template('index.html', all_teams=all_teams["teams"])
 
 # == ADD DATA ROUTES ==== ADD DATA ROUTES ==== ADD DATA ROUTES ==== ADD DATA ROUTES ==== ADD DATA ROUTES ==
@@ -15,11 +15,18 @@ def home():
 @app.route('/create/player', methods=['GET','POST'])
 def create_player():
     form = PlayerForm()
+    teams = requests.get("http://backend:5000/read/allTeams").json()
+
+    for team in teams["teams"]:
+        form.teams.choices.append((team["team_id"], team["team_name"]))
 
     if request.method == "POST":
         response = requests.post(
-            "http://backend:5000/create/player",
-            json={"first_name": form.first_name.data, "last_name": form.last_name.data}
+            f"http://backend:5000/create/player/{form.teams.data}",
+            json={
+                "first_name": form.first_name.data,
+                "last_name": form.last_name.data,
+            }
         )
         app.logger.info(f"Response: {response.text}")
         return redirect(url_for('home'))
@@ -32,7 +39,7 @@ def create_teams():
 
     if request.method == "POST":
         response = requests.post(
-            "http://todo-app-backend:5000/create/teams",
+            "http://backend:5000/create/teams",
             json={"team_name": form.team_name.data, "game": form.game.data}
         )
         app.logger.info(f"Response: {response.text}")

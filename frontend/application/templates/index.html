@@ -5,15 +5,18 @@
     {% for team in all_teams %}
         <p>
             Team ID: {{ team["team_id"] }}<br>
+            Name: {{ team["team_name"] }}<br>
             Game: {{ team["game"] }}<br>
-        </p>    
-    {% endfor %}
-    <!-- <h2>Players</h2>
-    {% for player in all_players %}
+        </p>
+        
+        <h3>Players</h3>
+        {% for players in team["org"] %}
         <p>
-            Player ID: {{ team["player_id"] }}<br>
-            First Name: {{ team["first_name"] }}<br>
-            Second Name: {{ team["last_name"] }}<br>
-        </p>    
-    {% endfor %} -->
+            Player ID: {{ players["player_id"] }}<br>
+            First Name: {{ players["first_name"] }}<br>
+            Last Name: {{ players["last_name"] }}<br>
+        </p>
+
+        {% endfor %}
+    {% endfor %}
 {% endblock body %}
