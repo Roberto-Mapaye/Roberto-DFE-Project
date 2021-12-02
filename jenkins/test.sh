@@ -13,13 +13,13 @@ mkdir test_reports
 
 python3 -m pytest frontend --cov=frontend/application \
     --cov-report term-missing \
-    --cov-report xml:test-reports/frontend_coverage.xml \
-    --junitxml=test-reports/frontend-junit_report.xml
+    --cov-report xml:test_reports/frontend_coverage.xml \
+    --junitxml=test_reports/frontend-junit_report.xml
 
 python3 -m pytest backend --cov=backend/application \
     --cov-report term-missing \
-    --cov-report xml:test-reports/backend_coverage.xml \
-    --junitxml=test-reports/backend-junit_report.xml
+    --cov-report xml:test_reports/backend_coverage.xml \
+    --junitxml=test_reports/backend-junit_report.xml
 
 deactivate
 rm -rf venv
