@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Build stage"
+echo "Build stag"
 
 # build images time
 docker-compose build
