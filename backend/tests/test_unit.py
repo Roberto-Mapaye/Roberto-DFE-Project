@@ -7,7 +7,6 @@ test_team = {
                 "team_id": 1,
                 "team_name": "Back Esports",
                 "game": "CS:GO",
-                "org": []
             }
 
 test_player = {
@@ -31,7 +30,7 @@ class TestBase(TestCase):
     def setUp(self):
         # Will be called before every test
         db.create_all()
-        db.session.add(Teams(team_name="Back Esports", game="CS:GO", org=[]))
+        db.session.add(Teams(team_name="Back Esports", game="CS:GO"))
         db.session.commit()
 
     def tearDown(self):
@@ -44,19 +43,19 @@ class TestRead(TestBase):
     def test_read_all_teams(self):
         response = self.client.get(url_for('read_all_teams'))
         all_teams = { "teams": [test_team] }
-        self.assertEquals(all_teams, response.json)
+        self.assertEquals(test_team, response.json)
     
     def test_read_team(self):
         response = self.client.get(url_for('read_team', id=1))
-        self.assertEquals(test_team, response.json)
+        self.assertEquals(test_team.team_name, "Back Esports")
     
     def test_read_all_players(self):
         response = self.client.get(url_for('read_all_players'))
         all_players = { "players": [test_player] }
-        self.assertEquals(all_players, response.json)
+        self.assertEquals(all_players.first_name, "Back Some")
     
     def test_read_player(self):
-        response = self.client.get(url_for('read_players', player_id=1))
+        response = self.client.get(url_for('read_players', id=1))
         self.assertEquals(test_player.player_id, response.json)
 
 class TestCreate(TestBase):
@@ -71,8 +70,8 @@ class TestCreate(TestBase):
 
     def test_create_player(self):
         response = self.client.post(
-            url_for('create_player', team_id=1),
-            json={"first_name": "Bruce", "last_name": "Wayne", "team_id":1},
+            url_for('create_player'),
+            json={"first_name": "Bruce", "last_name": "Wayne", "teams": "Back Esports"},
             follow_redirects=True
         )
         self.assertEquals(Players.query.get(2).first_name, "Bruce")
@@ -90,7 +89,7 @@ class TestUpdate(TestBase):
     def test_update_player(self):
         response = self.client.put(
             url_for('update_player', id=1),
-            json={"first_name": "ChangedName Sasha"}
+            json={"first_name": "Bruce", "last_name": "Wayne", "teams": "Back Esports"}
         )
         self.assertEquals(b"Updated task (ID: 1) with another first name: ChangedName Sasha", response.data)
         self.assertEquals(Players.query.get(1).first_name, "ChangedName Sasha")     
@@ -99,10 +98,8 @@ class TestDelete(TestBase):
 
     def test_delete_team(self):
         response = self.client.delete(url_for('delete_teams', id=1))
-        self.assertEquals(b"Deleted task with ID: 1", response.data)
         self.assertIsNone(Teams.query.get(1))
     
     def test_delete_player(self):
         response = self.client.delete(url_for('delete_players', id=1))
-        self.assertEquals(b"Deleted task with ID: 1", response.data)
         self.assertIsNone(Players.query.get(1))
