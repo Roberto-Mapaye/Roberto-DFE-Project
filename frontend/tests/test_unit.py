@@ -60,7 +60,7 @@ class TestRead(TestBase):
             all_teams = { "teams": [test_team] }
             m.get(f"http://{backend}/read/allTeams", json=all_teams)
             response = self.client.get(url_for('home'))
-            self.assertIn(b"Test the frontend", response.data)
+            self.assertIn(b"Esports", response.data)
 
 class TestCreate(TestBase):
 
@@ -70,10 +70,10 @@ class TestCreate(TestBase):
             m.get(f"http://{backend}/read/allTeams", json={ "players" : [test_player]})
             response = self.client.post(
                 url_for('create_player'),
-                json={"first_name": "Sarah", "last_name": "Smithson", team["teams"]: "Esports"},
+                json={"first_name": "Sarah", "last_name": "Smithson"},
                 follow_redirects=True
             )
-            self.assertIn(b"Testing create player functionality", response.data)
+            self.assertIn(b"Sarah", response.data)
 
     def test_create_player(self):
         with requests_mock.Mocker() as m:
@@ -84,7 +84,7 @@ class TestCreate(TestBase):
                 json={"team_name": "ZSports"},
                 follow_redirects=True
             )
-            self.assertIn(b"Testing create team functionality", response.data)
+            self.assertIn(b"ZSports", response.data)
     
 class TestUpdate(TestBase):
 
@@ -99,7 +99,7 @@ class TestUpdate(TestBase):
                 data={"team_name": "No Sports"},
                 follow_redirects=True
             )
-            self.assertIn(b"Testing update team name functionality", response.data)
+            self.assertIn(b"No Sports", response.data)
     
     def test_update_team_sports(self):
         with requests_mock.Mocker() as m:
@@ -112,7 +112,7 @@ class TestUpdate(TestBase):
                 data={"game": "Overwatch"},
                 follow_redirects=True
             )
-            self.assertIn(b"Testing update team game functionality", response.data)
+            self.assertIn(b"Overwatch", response.data)
     
         
 
