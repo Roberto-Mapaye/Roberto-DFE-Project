@@ -11,7 +11,6 @@ pip3 install -r backend/requirements.txt
 
 mkdir test-reports
 
-
 python3 -m pytest frontend --cov=frontend/application \
     --cov-report term-missing \
     --cov-report xml:test-reports/frontend_coverage.xml \
