@@ -1,3 +1,6 @@
 flask
 flask_wtf
 requests
+pytest
+flask-testing
+requests_mock
