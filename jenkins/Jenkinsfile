@@ -1,19 +1,22 @@
 pipeline {
     agent any
-
     environment {
         DOCKER_HUB_CREDS = credentials("DOCKER_HUB_CREDS")
     }
 
     stages {
-        stage('Webhook')([
-            $class: 'GitSCM',
-            branches: [[name: 'dev']],
-            userRemoteConfigs: [[
-            url: 'git@github.com:Roberto-Mapaye/Roberto-DFE-Project.git',
-            credentialsId: '',
-            ]]
-        ])
+        stage('Checkout SCM') {
+            steps {
+                checkout([
+                 $class: 'GitSCM',
+                 branches: [[name: 'dev']],
+                 userRemoteConfigs: [[
+                    url: 'git@github.com:Roberto-Mapaye/Roberto-DFE-Project.git',
+                    credentialsId: '',
+                 ]]
+                ])
+            }
+        }
         stage('Setup') {
             steps {
                 sh "bash jenkins/setup.sh"
