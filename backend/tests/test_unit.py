@@ -45,7 +45,7 @@ class TestRead(TestBase):
     def test_read_all_teams(self):
         response = self.client.get(url_for('read_all_teams'))
         all_teams = { "teams": [test_team] }
-        self.assertEquals(test_team, response.json)
+        self.assertEquals(all_teams, response.json)
     
     def test_read_team(self):
         response = self.client.get(url_for('read_team', id=1))
@@ -54,11 +54,11 @@ class TestRead(TestBase):
     def test_read_all_players(self):
         response = self.client.get(url_for('read_all_players'))
         all_players = { "players": [test_player] }
-        self.assertEquals(all_players["first_name"], "Back Some")
+        self.assertEquals(all_players["first_name"], "Back SomeGuy")
     
     def test_read_player(self):
         response = self.client.get(url_for('read_players', id=1))
-        self.assertEquals(test_player.player_id, response.json)
+        self.assertEquals(test_player["player_id"], response.json)
 
 class TestCreate(TestBase):
 
@@ -72,11 +72,11 @@ class TestCreate(TestBase):
 
     def test_create_player(self):
         response = self.client.post(
-            url_for('create_player'),
-            json={"first_name": "Bruce", "last_name": "Wayne", "player_id": 2, "team_id": 2},
+            url_for('create_player', team_id=1),
+            json={"first_name": "Bruce", "last_name": "Wayne", "player_id": 2, "team_id": 1},
             follow_redirects=True
         )
-        self.assertEquals(Players.query.get(2).first_name, "Bruce")
+        self.assertEquals(Players.query.get(2)["first_name"], "Bruce")
 
 class TestUpdate(TestBase):
 
@@ -94,7 +94,7 @@ class TestUpdate(TestBase):
             json={"first_name": "Bruce", "last_name": "Wayne", "teams": "Back Esports"}
         )
         self.assertEquals(b"Updated task (ID: 1) with another first name: ChangedName Sasha", response.data)
-        self.assertEquals(Players.query.get(1).first_name, "ChangedName Sasha")     
+        self.assertEquals(Players.query.get(1).first_name, "Updated task (ID: 1) with description: Bruce")     
 
 class TestDelete(TestBase):
 
