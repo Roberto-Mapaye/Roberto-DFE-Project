@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Deploy stage"
+echo "Deploy stae"
 
 scp docker-compose.yaml jenkins@swarm-manager-2:/home/jenkins/docker-compose.yaml
 ssh jenkins@swarm-manager-2 \
