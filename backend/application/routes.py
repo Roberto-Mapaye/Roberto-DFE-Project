@@ -32,7 +32,7 @@ def read_all_players():
     all_players = Players.query.all()
     players_dict = {"players": []}
     for players in all_players:
-        players_dict.append(
+        players_dict["players"].append(
             {
                 "player_id": players.player_id,
                 "team_id": players.team_id,
@@ -52,9 +52,9 @@ def read_team(id):
                 }
     return jsonify(teams_dict)
 
-@app.route('/read/player/<int:player_id>', methods=['GET'])
-def read_players(player_id):
-    player = Players.query.get(player_id)
+@app.route('/read/player/<int:id>', methods=['GET'])
+def read_players(id):
+    player = Players.query.get(id)
     player_dict = {
         "player_id": player.player_id,
         "team_id": player.team_id,
