@@ -29,18 +29,27 @@ def read_all_teams():
 
 @app.route('/read/allPlayers', methods=['GET'])
 def read_all_players():
-    all_players = Players.query.all()
-    players_dict = {"players": []}
-    for players in all_players:
-        players_dict["players"].append(
+    all_teams = Teams.query.all()
+    teams_dict = {"teams": []}
+    for teams in all_teams:
+        players = []
+        for player in teams.org:
+            players.append(
+                {
+                    "player_id": player.player_id,
+                    "first_name": player.first_name,
+                    "last_name": player.last_name
+                }
+            )
+        teams_dict["teams"].append(
             {
-                "player_id": players.player_id,
-                "team_id": players.team_id,
-                "first_name": players.first_name,
-                "last_name": players.last_name
+                "team_id": teams.team_id,
+                "team_name": teams.team_name,
+                "game": teams.game,
+                "org": players
             }
         )
-    return jsonify(players_dict)
+    return jsonify(players)
 
 @app.route('/read/team/<int:id>', methods=['GET'])
 def read_team(id):
