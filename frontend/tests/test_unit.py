@@ -70,7 +70,7 @@ class TestCreate(TestBase):
             m.get(f"http://{backend}/read/allTeams", json={ "players" : [test_player]})
             response = self.client.post(
                 url_for('create_player'),
-                json={"first_name": "Sarah"},
+                json={"first_name": "Sarah", "last_name": "Smithson", team["teams"]: "Esports"},
                 follow_redirects=True
             )
             self.assertIn(b"Testing create player functionality", response.data)
@@ -80,7 +80,7 @@ class TestCreate(TestBase):
             m.post(f"http://{backend}/create/teams", text="Test response")
             m.get(f"http://{backend}/read/allTeams", json={ "teams" : [test_team]})
             response = self.client.post(
-                url_for('create_team'),
+                url_for('create_teams'),
                 json={"team_name": "ZSports"},
                 follow_redirects=True
             )
@@ -95,7 +95,7 @@ class TestUpdate(TestBase):
             test_team["team_name"] = "No Sports"
             m.get(f"http://{backend}/read/allTeams", json={ "teams": [test_team] })
             response = self.client.post(
-                url_for('update_teams', id=1),
+                url_for('update_team', id=1),
                 data={"team_name": "No Sports"},
                 follow_redirects=True
             )
@@ -108,7 +108,7 @@ class TestUpdate(TestBase):
             test_team["game"] = "Overwatch"
             m.get(f"http://{backend}/read/allTeams", json={ "teams": [test_team] })
             response = self.client.post(
-                url_for('update_teams', id=1),
+                url_for('update_team', id=1),
                 data={"game": "Overwatch"},
                 follow_redirects=True
             )

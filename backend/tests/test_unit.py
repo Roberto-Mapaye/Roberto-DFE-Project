@@ -6,7 +6,8 @@ from application.models import Teams, Players
 test_team = {
                 "team_id": 1,
                 "team_name": "Back Esports",
-                "game": "CS:GO"
+                "game": "CS:GO",
+                "org": []
             }
 
 test_player = {
@@ -62,7 +63,7 @@ class TestCreate(TestBase):
 
     def test_create_team(self):
         response = self.client.post(
-            url_for('create_team'),
+            url_for('create_teams'),
             json={"team_name": "SLC", "game": "Overwatch"},
             follow_redirects=True
         )
@@ -71,7 +72,7 @@ class TestCreate(TestBase):
 
     def test_create_player(self):
         response = self.client.post(
-            url_for('create_player', id=1),
+            url_for('create_player', team_id=1),
             json={"first_name": "Bruce", "last_name": "Wayne", "team_id":1},
             follow_redirects=True
         )
@@ -85,7 +86,7 @@ class TestUpdate(TestBase):
             url_for('update_team', id=1),
             json={"team_name": "ChangedName Esports", "game": "CS:GO"}
         )
-        self.assertEquals(b"Updated team (ID: 1) with another name: ChangedName Esports", response.data)
+        self.assertEquals(b"Updated task (ID: 1) with description: ChangedName Esports", response.data)
         self.assertEquals(Teams.query.get(1).team_name, "ChangedName Esports")
 
     def test_update_player(self):
@@ -93,7 +94,7 @@ class TestUpdate(TestBase):
             url_for('update_player', id=1),
             json={"first_name": "ChangedName Sasha"}
         )
-        self.assertEquals(b"Updated player (ID: 1) with another first name: ChangedName Sasha", response.data)
+        self.assertEquals(b"Updated task (ID: 1) with another first name: ChangedName Sasha", response.data)
         self.assertEquals(Players.query.get(1).first_name, "ChangedName Sasha")     
 
 class TestDelete(TestBase):
@@ -104,6 +105,6 @@ class TestDelete(TestBase):
         self.assertIsNone(Teams.query.get(1))
     
     def test_delete_player(self):
-        response = self.client.delete(url_for('delete_players', player_id=1))
+        response = self.client.delete(url_for('delete_players', id=1))
         self.assertEquals(b"Deleted task with ID: 1", response.data)
         self.assertIsNone(Players.query.get(1))

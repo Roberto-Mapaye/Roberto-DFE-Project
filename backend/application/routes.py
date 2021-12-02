@@ -40,7 +40,7 @@ def read_all_players():
                 "last_name": players.last_name
             }
         )
-    return jsonify(player_dict)
+    return jsonify(players_dict)
 
 @app.route('/read/team/<int:id>', methods=['GET'])
 def read_team(id):
