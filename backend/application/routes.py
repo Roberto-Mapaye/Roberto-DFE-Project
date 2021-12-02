@@ -52,18 +52,15 @@ def read_team(id):
                 }
     return jsonify(teams_dict)
 
-@app.route('/read/team/<int:team_id>/players/<int:player_id>', methods=['GET'])
-def read_players(team_id,player_id):
-    all_teams = Teams.query.get(team_id)
-    select_player = Players.query.get(player_id)
-    for players in all_teams.org:
-        if select_player == players.player_id:
-            player_dict = {
-                "player_id": players.player_id,
-                "team_id": players.team_id,
-                "first_name": players.first_name,
-                "last_name": players.last_name
-            }
+@app.route('/read/player/<int:player_id>', methods=['GET'])
+def read_players(player_id):
+    player = Players.query.get(player_id)
+    player_dict = {
+        "player_id": player.player_id,
+        "team_id": player.team_id,
+        "first_name": player.first_name,
+        "last_name": player.last_name
+    }
     return jsonify(player_dict)
 
 
@@ -103,15 +100,15 @@ def delete_teams(id):
 
 # == UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==
 
-# @app.route('/update/player/<int:id>', methods=['PUT'])
-# def update_player(id):
-#     package = request.json
-#     change_player = Players.query.get(id)
-#     change_player.first_name = package["first_name"]
-#     change_player.last_name = package["last_name"]
-#     change_player.game = package["game_name"]
-#     db.session.commit()
-#     return Response(f"Updated task (ID: {id}) with description: {task.description}", mimetype='text/plain')
+@app.route('/update/player/<int:id>', methods=['PUT'])
+def update_player(id):
+    package = request.json
+    change_player = Players.query.get(id)
+    change_player.first_name = package["first_name"]
+    change_player.last_name = package["last_name"]
+    # change_player.team_id = team_id
+    db.session.commit()
+    return Response(f"Updated task (ID: {id}) with description: {change_player.first_name}", mimetype='text/plain')
 
 @app.route('/update/team/<int:id>', methods=['PUT'])
 def update_team(id):
@@ -120,4 +117,4 @@ def update_team(id):
     team.team_name = package["team_name"]
     team.game = package["game"]
     db.session.commit()
-    return Response(f"Updated task (ID: {id}) with description: {task.description}", mimetype='text/plain')
+    return Response(f"Updated task (ID: {id}) with description: {team.team_name}", mimetype='text/plain')

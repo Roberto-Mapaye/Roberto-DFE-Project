@@ -62,22 +62,22 @@ def delete_teams(id):
 
 # == UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==
 
-# @app.route('/update/player/<int:id>', methods=['GET','POST'])
-# def update_player(id):
-#     form = PlayerForm()
-#     player = requests.get(f"http://backend:5000/read/teams/{id}/players/{id}").json()
-#     teams = requests.get("http://backend:5000/read/allTeams").json()
+@app.route('/update/player/<int:id>', methods=['GET','POST'])
+def update_player(id):
+    form = PlayerForm()
+    player = requests.get(f"http://backend:5000/read/player/{id}").json()
+    # teams = requests.get("http://backend:5000/read/allTeams").json()
 
-#     for team in teams["teams"]:
-#         form.teams.choices.append((team["team_id"], team["team_name"]))
+    # for team in teams["teams"]:
+    #     form.teams.choices.append((team["team_id"], team["team_name"]))
 
-#     if request.method == "POST":
-#         response = requests.post(f"http://backend:5000/update/player/{id}", json={
-#             "first_name": form.first_name.data,
-#             "last_name": form.last_name.data,
-#             })
-#         return redirect(url_for('home'))
-#     return render_template('update_player.html', player=player, form=form)
+    if request.method == "POST":
+        response = requests.put(f"http://backend:5000/update/player/{id}", json={
+            "first_name": form.first_name.data,
+            "last_name": form.last_name.data
+            })
+        return redirect(url_for('home'))
+    return render_template('update_player.html', player=player, form=form)
 
 @app.route('/update/team/<int:id>', methods=['GET','POST'])
 def update_team(id):
