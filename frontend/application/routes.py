@@ -3,10 +3,12 @@ from application.forms import PlayerForm, TeamForm
 from flask import render_template, request, redirect, url_for, jsonify
 import requests
 
+backend = "backend:5000"
+
 @app.route('/')
 @app.route('/home')
 def home():
-    all_teams = requests.get("http://backend:5000/read/allTeams").json()
+    all_teams = requests.get(f"http://{backend}/read/allTeams").json()
     # app.logger.info(f"Teams: {all_teams}")
     return render_template('index.html', all_teams=all_teams["teams"])
 
@@ -15,14 +17,14 @@ def home():
 @app.route('/create/player', methods=['GET','POST'])
 def create_player():
     form = PlayerForm()
-    teams = requests.get("http://backend:5000/read/allTeams").json()
+    teams = requests.get(f"http://{backend}/read/allTeams").json()
 
     for team in teams["teams"]:
         form.teams.choices.append((team["team_id"], team["team_name"]))
 
     if request.method == "POST":
         response = requests.post(
-            f"http://backend:5000/create/player/{form.teams.data}",
+            f"http://{backend}/create/player/{form.teams.data}",
             json={
                 "first_name": form.first_name.data,
                 "last_name": form.last_name.data,
@@ -40,7 +42,7 @@ def create_teams():
 
     if request.method == "POST":
         response = requests.post(
-            "http://backend:5000/create/teams",
+            f"http://{backend}/create/teams",
             json={"team_name": form.team_name.data, "game": form.game.data}
         )
         app.logger.info(f"Response: {response.text}")
@@ -52,12 +54,12 @@ def create_teams():
 
 @app.route('/delete/player/<int:id>')
 def delete_players(id):
-    response = requests.delete(f"http://backend:5000/delete/player/{id}")
+    response = requests.delete(f"http://{backend}/delete/player/{id}")
     return redirect(url_for('home'))
 
 @app.route('/delete/team/<int:id>')
 def delete_teams(id):
-    response = requests.delete(f"http://backend:5000/delete/team/{id}")
+    response = requests.delete(f"http://{backend}/delete/team/{id}")
     return redirect(url_for('home'))
 
 # == UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==
@@ -65,14 +67,14 @@ def delete_teams(id):
 @app.route('/update/player/<int:id>', methods=['GET','POST'])
 def update_player(id):
     form = PlayerForm()
-    player = requests.get(f"http://backend:5000/read/player/{id}").json()
-    # teams = requests.get("http://backend:5000/read/allTeams").json()
+    player = requests.get(f"http://{backend}/read/player/{id}").json()
+    # teams = requests.get("http://{backend}/read/allTeams").json()
 
     # for team in teams["teams"]:
     #     form.teams.choices.append((team["team_id"], team["team_name"]))
 
     if request.method == "POST":
-        response = requests.put(f"http://backend:5000/update/player/{id}", json={
+        response = requests.put(f"http://{backend}/update/player/{id}", json={
             "first_name": form.first_name.data,
             "last_name": form.last_name.data
             })
@@ -82,10 +84,10 @@ def update_player(id):
 @app.route('/update/team/<int:id>', methods=['GET','POST'])
 def update_team(id):
     form = TeamForm()
-    team = requests.get(f"http://backend:5000/read/team/{id}").json()
+    team = requests.get(f"http://{backend}/read/team/{id}").json()
 
     if request.method == "POST":
-        response = requests.put(f"http://backend:5000/update/team/{id}",
+        response = requests.put(f"http://{backend}/update/team/{id}",
             json={"team_name": form.team_name.data, "game": form.game.data}
         )
         return redirect(url_for('home'))
