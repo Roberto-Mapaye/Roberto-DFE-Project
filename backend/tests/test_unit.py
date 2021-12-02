@@ -32,6 +32,7 @@ class TestBase(TestCase):
         # Will be called before every test
         db.create_all()
         db.session.add(Teams(team_name="Back Esports", game="CS:GO"))
+        db.session.add(Players(first_name="Back Esports", last_name="CS:GO", team_id=1))
         db.session.commit()
 
     def tearDown(self):
