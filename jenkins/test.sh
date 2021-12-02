@@ -9,7 +9,7 @@ pip3 install pytest pytest-cov flask_testing
 pip3 install -r frontend/requirements.txt
 pip3 install -r backend/requirements.txt
 
-mkdir test-reports
+mkdir test_reports
 
 python3 -m pytest frontend --cov=frontend/application \
     --cov-report term-missing \
