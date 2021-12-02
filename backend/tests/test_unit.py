@@ -50,12 +50,12 @@ class TestRead(TestBase):
         self.assertEquals(test_team, response.json)
     
     def test_read_all_players(self):
-        response = self.client.get(url_for('read_all_players', id=1))
+        response = self.client.get(url_for('read_all_players'))
         all_players = { "players": [test_player] }
         self.assertEquals(all_players, response.json)
     
     def test_read_player(self):
-        response = self.client.get(url_for('read_players', id=1))
+        response = self.client.get(url_for('read_players', player_id=1))
         self.assertEquals(test_player, response.json)
 
 class TestCreate(TestBase):
@@ -83,7 +83,7 @@ class TestUpdate(TestBase):
     def test_update_team(self):
         response = self.client.put(
             url_for('update_team', id=1),
-            json={"team_name": "ChangedName Esports"}
+            json={"team_name": "ChangedName Esports", "game": "CS:GO"}
         )
         self.assertEquals(b"Updated team (ID: 1) with another name: ChangedName Esports", response.data)
         self.assertEquals(Teams.query.get(1).team_name, "ChangedName Esports")
@@ -104,6 +104,6 @@ class TestDelete(TestBase):
         self.assertIsNone(Teams.query.get(1))
     
     def test_delete_player(self):
-        response = self.client.delete(url_for('delete_players', id=1))
+        response = self.client.delete(url_for('delete_players', player_id=1))
         self.assertEquals(b"Deleted task with ID: 1", response.data)
         self.assertIsNone(Players.query.get(1))

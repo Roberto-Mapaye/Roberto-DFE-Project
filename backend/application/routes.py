@@ -1,6 +1,6 @@
 from application import app, db
 from application.models import Players, Teams
-from flask import render_template, request, redirect, url_for, jsonify
+from flask import render_template, request, redirect, url_for, jsonify, Response
 from os import getenv
 
 @app.route('/read/allTeams', methods=['GET'])
@@ -28,7 +28,7 @@ def read_all_teams():
     return jsonify(teams_dict)
 
 @app.route('/read/allPlayers', methods=['GET'])
-def read_all_players(id):
+def read_all_players():
     all_players = Players.query.all()
     players_dict = {"players": []}
     for players in all_players:
