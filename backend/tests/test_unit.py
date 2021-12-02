@@ -31,7 +31,7 @@ class TestBase(TestCase):
     def setUp(self):
         # Will be called before every test
         db.create_all()
-        db.session.add(Teams(team_name="Back Esports", game="CS:GO"))
+        db.session.add(Teams(team_name="Back Esports", game="CS:GO", org=[]))
         db.session.commit()
 
     def tearDown(self):
@@ -67,7 +67,6 @@ class TestCreate(TestBase):
             json={"team_name": "SLC", "game": "Overwatch"},
             follow_redirects=True
         )
-        self.assertEquals(b"Added task with description: Testing create team functionality", response.data)
         self.assertEquals(Teams.query.get(2).team_name, "SLC")
 
     def test_create_player(self):
@@ -76,7 +75,6 @@ class TestCreate(TestBase):
             json={"first_name": "Bruce", "last_name": "Wayne", "team_id":1},
             follow_redirects=True
         )
-        self.assertEquals(b"Added task with description: Testing create player functionality", response.data)
         self.assertEquals(Players.query.get(2).first_name, "Bruce")
 
 class TestUpdate(TestBase):

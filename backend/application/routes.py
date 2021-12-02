@@ -32,7 +32,7 @@ def read_all_players():
     all_players = Players.query.all()
     players_dict = {"players": []}
     for players in all_players:
-        players_dict["players"].append(
+        players_dict.append(
             {
                 "player_id": players.player_id,
                 "team_id": players.team_id,
