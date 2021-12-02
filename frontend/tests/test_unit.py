@@ -66,19 +66,8 @@ class TestCreate(TestBase):
 
     def test_create_team(self):
         with requests_mock.Mocker() as m:
-            all_players = { "teams": 
-                [
-                    test_team,
-                    {
-                        "player_id": 2,
-                        "team_id": 1,
-                        "first_name": "Sarah",
-                        "last_name": "Johnson",
-                    }
-                ] 
-            }
             m.post(f"http://{backend}/create/teams", text="Test response")
-            m.get(f"http://{backend}/read/allTeams", json=all_players)
+            m.get(f"http://{backend}/read/allTeams", json={ "players" : [test_player]})
             response = self.client.post(
                 url_for('create_player'),
                 json={"first_name": "Sarah"},
@@ -88,18 +77,8 @@ class TestCreate(TestBase):
 
     def test_create_player(self):
         with requests_mock.Mocker() as m:
-            all_teams = { "players": 
-                [
-                    test_player,
-                    {
-                        "team_id": 2,
-                        "team_name": "ZSports",
-                        "game": "DOTA"
-                    }
-                ] 
-            }
             m.post(f"http://{backend}/create/teams", text="Test response")
-            m.get(f"http://{backend}/read/allTeams", json=all_teams)
+            m.get(f"http://{backend}/read/allTeams", json={ "teams" : [test_team]})
             response = self.client.post(
                 url_for('create_team'),
                 json={"team_name": "ZSports"},
