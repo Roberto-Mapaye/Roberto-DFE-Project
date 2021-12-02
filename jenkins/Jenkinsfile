@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_HUB_CREDS = credentials("DOCKER_HUB_CREDS")
-        DATABASE_URI = 'sqlite:///data.db'
+        DATABASE_URI = credentials("DATABASE_URI")
     }
 
     stages {
