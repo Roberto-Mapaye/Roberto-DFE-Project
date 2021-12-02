@@ -57,7 +57,7 @@ class TestRead(TestBase):
     
     def test_read_player(self):
         response = self.client.get(url_for('read_players', player_id=1))
-        self.assertEquals(test_player, response.json)
+        self.assertEquals(test_player.player_id, response.json)
 
 class TestCreate(TestBase):
 
