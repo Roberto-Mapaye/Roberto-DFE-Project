@@ -36,6 +36,7 @@ def create_player():
 @app.route('/create/teams', methods=['GET','POST'])
 def create_teams():
     form = TeamForm()
+    
 
     if request.method == "POST":
         response = requests.post(
@@ -47,32 +48,46 @@ def create_teams():
 
     return render_template("create_team.html", title="Add a new Task", form=form)
 
+# == DELETE DATA ROUTES ==== DELETE DATA ROUTES ==== DELETE DATA ROUTES ==== DELETE DATA ROUTES ==
+
+@app.route('/delete/player/<int:id>')
+def delete_players(id):
+    response = requests.delete(f"http://backend:5000/delete/player/{id}")
+    return redirect(url_for('home'))
+
+@app.route('/delete/team/<int:id>')
+def delete_teams(id):
+    response = requests.delete(f"http://backend:5000/delete/team/{id}")
+    return redirect(url_for('home'))
+
 # == UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==
 
 # @app.route('/update/player/<int:id>', methods=['GET','POST'])
-# def update_task(id):
-#     form = TaskForm()
-#     task = requests.get(f"http://todo-app-backend:5000/read/task/{id}").json()
-
-#     if request.method == "POST":
-#         response = requests.put(f"http://todo-app-backend:5000/update/task/{id}", json={"description": form.description.data})
-#         return redirect(url_for('home'))
-#     return render_template('update_task.html', task=task, form=form)
-
-# @app.route('/update/team/<int:id>', methods=['GET','POST'])
-# def update_task(id):
+# def update_player(id):
 #     form = PlayerForm()
-#     u_player = Players.query.get(player_id)
+#     player = requests.get(f"http://backend:5000/read/teams/{id}/players/{id}").json()
+#     teams = requests.get("http://backend:5000/read/allTeams").json()
+
+#     for team in teams["teams"]:
+#         form.teams.choices.append((team["team_id"], team["team_name"]))
 
 #     if request.method == "POST":
-#         u_player.team = form.team.data
-#         db.session.commit()
+#         response = requests.post(f"http://backend:5000/update/player/{id}", json={
+#             "first_name": form.first_name.data,
+#             "last_name": form.last_name.data,
+#             })
 #         return redirect(url_for('home'))
+#     return render_template('update_player.html', player=player, form=form)
 
-#     return render_template('update_task.html', task=task, form=form)
-# == DELETE DATA ROUTES ==== DELETE DATA ROUTES ==== DELETE DATA ROUTES ==== DELETE DATA ROUTES ==
+@app.route('/update/team/<int:id>', methods=['GET','POST'])
+def update_team(id):
+    form = TeamForm()
+    team = requests.get(f"http://backend:5000/read/team/{id}").json()
 
-# @app.route('/delete/task/<int:id>')
-# def delete_task(id):
-#     response = requests.delete(f"http://todo-app-backend:5000/update/task/{id}")
-#     return redirect(url_for('home'))
+    if request.method == "POST":
+        response = requests.put(f"http://backend:5000/update/team/{id}",
+            json={"team_name": form.team_name.data, "game": form.game.data}
+        )
+        return redirect(url_for('home'))
+
+    return render_template('update_teams.html', team=team, form=form)

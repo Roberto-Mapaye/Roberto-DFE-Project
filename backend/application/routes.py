@@ -42,28 +42,30 @@ def read_all_players(id):
         )
     return jsonify(player_dict)
 
-@app.route('/read/teams/<int:id>', methods=['GET'])
+@app.route('/read/team/<int:id>', methods=['GET'])
 def read_team(id):
     teams = Teams.query.get(id)
     teams_dict = {
                     "team_id": teams.team_id,
                     "team_name": teams.team_name,
-                    "game": teams.game,
+                    "game": teams.game
                 }
     return jsonify(teams_dict)
 
-@app.route('/read/teams/<int:id>/players', methods=['GET'])
-def read_players(id):
-    player = Players.query.get(id)
-    players_dict = {"players": []}
-    for players in player:
-        players_dict["players"].append({
-            "player_id": players.player_id,
-            "team_id": players.team_id,
-            "first_name": players.first_name,
-            "last_name": players.last_name
-        })
+@app.route('/read/team/<int:team_id>/players/<int:player_id>', methods=['GET'])
+def read_players(team_id,player_id):
+    all_teams = Teams.query.get(team_id)
+    select_player = Players.query.get(player_id)
+    for players in all_teams.org:
+        if select_player == players.player_id:
+            player_dict = {
+                "player_id": players.player_id,
+                "team_id": players.team_id,
+                "first_name": players.first_name,
+                "last_name": players.last_name
+            }
     return jsonify(player_dict)
+
 
 # == ADD DATA ROUTES ==== ADD DATA ROUTES ==== ADD DATA ROUTES ==== ADD DATA ROUTES ==== ADD DATA ROUTES ==
 
@@ -83,37 +85,39 @@ def create_teams():
     db.session.commit()
     return f"Planet '{new_teams.team_name}' added to database"
 
-# == UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==
-
-# @app.route('/update/player/<int:id>', methods=['GET','POST'])
-# def update_player(id):
-#     form = PlayerForm()
-#     u_player = Players.query.get(player_id)
-
-#     if request.method == "POST":
-#         u_player.team = form.team.data
-#         db.session.commit()
-#         return redirect(url_for('home'))
-
-#     return render_template('update_task.html', player=u_player, form=form)
-
-# @app.route('/update/team/<int:id>', methods=['GET','POST'])
-# def update_team(id):
-#     form = TeamForm()
-#     u_team = Teams.query.get(team_id)
-
-#     if request.method == "POST":
-#         u_team.team = form.team.data
-#         db.session.commit()
-#         return redirect(url_for('home'))
-
-#     return render_template('update_task.html', team=u_team, form=form)
-
 # == DELETE DATA ROUTES ==== DELETE DATA ROUTES ==== DELETE DATA ROUTES ==== DELETE DATA ROUTES ==
 
-# @app.route('/delete/task/<int:id>', methods=['DELETE'])
-# def delete_player(id):
-#     player = Players.query.get(id)
-#     db.session.delete(task)
+@app.route('/delete/player/<int:id>', methods=['DELETE'])
+def delete_players(id):
+    player = Players.query.get(id)
+    db.session.delete(player)
+    db.session.commit()
+    return Response(f"Deleted task with ID: {id}", mimetype='text/plain')
+
+@app.route('/delete/team/<int:id>', methods=['DELETE'])
+def delete_teams(id):
+    teams = Teams.query.get(id)
+    db.session.delete(teams)
+    db.session.commit()
+    return Response(f"Deleted task with ID: {id}", mimetype='text/plain')
+
+# == UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==== UPDATE DATA ROUTES ==
+
+# @app.route('/update/player/<int:id>', methods=['PUT'])
+# def update_player(id):
+#     package = request.json
+#     change_player = Players.query.get(id)
+#     change_player.first_name = package["first_name"]
+#     change_player.last_name = package["last_name"]
+#     change_player.game = package["game_name"]
 #     db.session.commit()
-#     return Response(f"Deleted task with ID: {id}", mimetype='text/plain')
+#     return Response(f"Updated task (ID: {id}) with description: {task.description}", mimetype='text/plain')
+
+@app.route('/update/team/<int:id>', methods=['PUT'])
+def update_team(id):
+    package = request.json
+    team = Teams.query.get(id)
+    team.team_name = package["team_name"]
+    team.game = package["game"]
+    db.session.commit()
+    return Response(f"Updated task (ID: {id}) with description: {task.description}", mimetype='text/plain')
