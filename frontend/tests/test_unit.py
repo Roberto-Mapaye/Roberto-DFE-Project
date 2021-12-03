@@ -35,7 +35,7 @@ class TestViews(TestBase):
             self.assert200(response)
     
     def test_create_team_get(self):
-        response = self.client.get(url_for('create_team'))
+        response = self.client.get(url_for('create_teams'))
         self.assert200(response)
     
     def test_create_player_get(self):
@@ -84,7 +84,7 @@ class TestCreate(TestBase):
                 json={"team_name": "ZSports"},
                 follow_redirects=True
             )
-            self.assertIn(b"ZSports", response.json)
+            self.assertIn(b"ZSports", response.data)
     
 class TestUpdate(TestBase):
 
