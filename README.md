@@ -39,11 +39,15 @@ This application is not a monolothic design but uses two services, one of which 
 
 By the use of pytest and Jenkins, I created test logs, test coverages and reports. The Jenkins pipelines reads these test coverage and uses a plugin (cobertura) to translate these data into easily read information. 
 
-![Test Results](https://i.imgur.com/rFGVman.png)
+![Test Results](https://i.imgur.com/jqlJzvZ.png)
 
-![Coverage](https://i.imgur.com/rFGVman.png)
+Out of 22 tests, about 6 failed. While i do wish that we succeed and obtain 100% success rate, the problems tend to relate with using relational databases. It does succeed and work regardless. 
 
-The plugin themselves allow for some information regarding code coverage and the errors caused by the application that the developer can solve. 
+![Coverage](https://i.imgur.com/PC7Pj3F.png)
+
+![Coverage](https://i.imgur.com/kyKVUg0.png)
+
+The coverage is over 80% for both backend and frontend. Overall, my coverage is around 92%, which means that i tested most of the code in my project. 
 
 ## Issues
 
