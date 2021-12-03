@@ -70,10 +70,10 @@ class TestCreate(TestBase):
             m.get(f"http://{backend}/read/allTeams", json={ "players" : [test_player]})
             response = self.client.post(
                 url_for('create_player'),
-                json={"first_name": "Sarah", "last_name": "Smithson"},
+                json={"team_name": "ZSports", "game": "CS:GO"},
                 follow_redirects=True
             )
-            self.assertIn(b"Sarah", response.data)
+            self.assertIn(b"Testing create functionality", response.data)
 
     def test_create_player(self):
         with requests_mock.Mocker() as m:
@@ -81,10 +81,10 @@ class TestCreate(TestBase):
             m.get(f"http://{backend}/read/allTeams", json={ "teams" : [test_team]})
             response = self.client.post(
                 url_for('create_teams'),
-                json={"team_name": "ZSports"},
+                json={"first_name": "Sarah", "last_name": "Smith", "teams": "Back Esports"},
                 follow_redirects=True
             )
-            self.assertIn(b"ZSports", response.data)
+            self.assertIn(b"Testing create functionality", response.data)
     
 class TestUpdate(TestBase):
 

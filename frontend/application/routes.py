@@ -9,7 +9,6 @@ backend = "backend:5000"
 @app.route('/home')
 def home():
     all_teams = requests.get(f"http://{backend}/read/allTeams").json()
-    # app.logger.info(f"Teams: {all_teams}")
     return render_template('index.html', all_teams=all_teams["teams"])
 
 # == ADD DATA ROUTES ==== ADD DATA ROUTES ==== ADD DATA ROUTES ==== ADD DATA ROUTES ==== ADD DATA ROUTES ==
