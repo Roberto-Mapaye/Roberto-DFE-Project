@@ -51,6 +51,7 @@ Here are some of the issues during developent/final build
 
 - Unable to delete a team that contains players. Must delete players first before deleting teams
 - Unable to switch teams for players (Unknown how to make this work)
+- CSS design for boxes tend to join to each other when creating teams. This only happens when the previous team has no players on them. 
 
 ## Future Improvements
 
