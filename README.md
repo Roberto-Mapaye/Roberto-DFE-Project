@@ -66,4 +66,6 @@ There are only two tables used on the design to simplify the structure of the da
 
 ## Other links
 
+https://drive.google.com/drive/folders/1vYIxhDnMal6_JxTU9dRinxOClK7eEMD1?usp=sharing
 
+Contains demonstration of my CI/CD pipeline and connnection to a Microsoft Azure Database. 
