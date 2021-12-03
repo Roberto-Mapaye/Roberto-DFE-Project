@@ -1,9 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
 
-    <h2>Teams</h2>
+    <h2>All Teams</h2>
     {% for team in all_teams %}
+        <section>
         <p>
+            <h2>Teams</h2>
             Team ID: {{ team["team_id"] }}<br>
             Name: {{ team["team_name"] }}<br>
             Game: {{ team["game"] }}<br>
@@ -11,7 +13,6 @@
             <a href="{{ url_for('delete_teams', id=team.team_id) }}">Delete</a>
             
         </p>
-        
         <h3>Players</h3>
         {% for players in team["org"] %}
         <p>
@@ -21,7 +22,7 @@
             <a href="{{ url_for('update_player', id=players.player_id) }}">Edit</a>
             <a href="{{ url_for('delete_players', id=players.player_id) }}">Delete</a>
         </p>
-
+        </section>
         {% endfor %}
     {% endfor %}
 {% endblock body %}
