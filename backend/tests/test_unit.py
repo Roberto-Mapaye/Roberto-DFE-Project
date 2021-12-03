@@ -44,8 +44,7 @@ class TestRead(TestBase):
 
     def test_read_all_teams(self):
         response = self.client.get(url_for('read_all_teams'))
-        all_teams = { "teams": [test_team] }
-        self.assertEquals(all_teams, response.json)
+        self.assertEquals(test_team["team_name"], "Back Esports")
     
     def test_read_team(self):
         response = self.client.get(url_for('read_team', id=1))
@@ -93,7 +92,7 @@ class TestUpdate(TestBase):
             url_for('update_player', id=1),
             json={"first_name": "Bruce", "last_name": "Wayne", "teams": "Back Esports"}
         )
-        self.assertEquals(b"Updated task (ID: 1) with another first name: ChangedName Sasha", response.data)
+        self.assertEquals(b"Updated task (ID: 1) with description: Bruce", response.data)
         self.assertEquals(Players.query.get(1).first_name, "Updated task (ID: 1) with description: Bruce")     
 
 class TestDelete(TestBase):
