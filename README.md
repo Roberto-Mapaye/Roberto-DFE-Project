@@ -31,9 +31,113 @@ This application is not a monolothic design but uses two services, one of which 
 
 ### Frontend Service
 
+The frontend service is connected to the Backend API, and has code that allows its to connect/commmunicate with it. This is done through routing. 
+
+```
+@app.route('/')
+@app.route('/home')
+def home():
+    all_teams = requests.get(f"http://{backend}/read/allTeams").json()
+    return render_template('index.html', all_teams=all_teams["teams"])
+```
+Shown above is my code trying to access another code from the backend folder by refering to it through its route (read/allTeams). If the website goes to a route '/' or '/home', it will send a message to the backend, which is then used to render the template into the HTML. 
+
+![HomePage](https://i.imgur.com/hNlBNLX.png)
+
+The application has two links which allows it to add a team and player for that team. 
+
+#### By clicking add team, a new team will be made. 
+
+![Add Team Page](https://i.imgur.com/Gz10HN4.png)
+
+![New Team Page](https://i.imgur.com/65IR10t.png)
+
+#### By clicking add player, a new player will be made
+
+![Add Player Page](https://i.imgur.com/TFKTU7U.png)
+
+![New Player Page](https://i.imgur.com/2l2LSCu.png)
+
+#### There is also an edit feature which is used to edit each detail. 
+
+![Edit Team Page](https://i.imgur.com/zhc7mnO.png)
+
+![Updated Player Page](https://i.imgur.com/QY69gq9.png)
+
+
 ### Backend Service
 
+Once a request has been made from the frontend, it'll send a message to the backend. Once this happens, the backend will send a return json script to be loaded into the HTML
+
+```
+@app.route('/read/allTeams', methods=['GET'])
+def read_all_teams():
+    all_teams = Teams.query.all()
+    teams_dict = {"teams": []}
+    for teams in all_teams:
+        players = []
+        for player in teams.org:
+            players.append(
+                {
+                    "player_id": player.player_id,
+                    "first_name": player.first_name,
+                    "last_name": player.last_name
+                }
+            )
+        teams_dict["teams"].append(
+            {
+                "team_id": teams.team_id,
+                "team_name": teams.team_name,
+                "game": teams.game,
+                "org": players
+            }
+        )
+    return jsonify(teams_dict)
+
+```
+Shown above is an example of this, where the backend sends a GET Method. This get method gets the data from the database and adds it into dictionary so that it can be loaded into a json script for HTML. This script uses two for loops that gets each team, and gets the player within each team. The frontend will then load this data into the HTML.
+
+This is also similar to the other commands such as Add, Edit and Delete.
+
+#### Add Team
+
+```
+@app.route('/create/teams', methods=['POST'])
+def create_teams():
+    package = request.json
+    new_teams = Teams(team_name=package["team_name"], game=package["game"])
+    db.session.add(new_teams)
+    db.session.commit()
+    return f"Planet '{new_teams.team_name}' added to database"
+```
+
+#### Edit Team
+
+```
+@app.route('/update/team/<int:id>', methods=['PUT'])
+def update_team(id):
+    package = request.json
+    team = Teams.query.get(id)
+    team.team_name = package["team_name"]
+    team.game = package["game"]
+    db.session.commit()
+    return Response(f"Updated task (ID: {id}) with description: {team.team_name}", mimetype='text/plain')
+```
+
+
+#### Delete Team
+```
+@app.route('/delete/team/<int:id>', methods=['DELETE'])
+def delete_teams(id):
+    teams = Teams.query.get(id)
+    db.session.delete(teams)
+    db.session.commit()
+    return Response(f"Deleted task with ID: {id}", mimetype='text/plain')
+```
+
 ## CI/CD Pipeline
+
+
 
 ## Testing
 
@@ -43,9 +147,9 @@ By the use of pytest and Jenkins, I created test logs, test coverages and report
 
 Out of 22 tests, about 6 failed. While i do wish that we succeed and obtain 100% success rate, the problems tend to relate with using relational databases. It does succeed and work regardless. 
 
-![Coverage](https://i.imgur.com/PC7Pj3F.png)
+![Backend](https://i.imgur.com/PC7Pj3F.png)
 
-![Coverage](https://i.imgur.com/kyKVUg0.png)
+![Frontend](https://i.imgur.com/kyKVUg0.png)
 
 The coverage is over 80% for both backend and frontend. Overall, my coverage is around 92%, which means that i tested most of the code in my project. 
 
