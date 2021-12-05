@@ -137,7 +137,16 @@ def delete_teams(id):
 
 ## CI/CD Pipeline
 
+The CI/CD pipeline is the important part of the process regarding the integration and release of the website. It is used to automatically test, merge, build and deploy the product. Shown below is the process and connections of my application regarding the CI/CD pipeline.
 
+![The Process](https://i.imgur.com/h8GJDmO.png)
+
+1. The VM and the Database are connected and communicate through the SQL Query, which is part of the code. This VM sends a message regarding any needed additions and changes that is created on the application website. The database also keeps track of this and allows the application to store more data. The SQL query is important to manage the database. 
+2. To update the website, I push the changes to my github repository. This allows me automatically deploy the changes into Jenkins through a webhook. The webhook sends Jenkins that there are new changes and must be set for deployment. Jenkins gets this code from my GitHub repository and selects the branch to get this changes from
+3. Once the code is recieved in Jenkins, it goes through a pipeline. It follows the Jenkinsfile Script that I have in my folder, which handles the setup, deploy, build, testing and push requirements for my website. 
+4. The Jenkins uses the results from testing to create a visual representation of my test results, which is used for development. 
+5. The Jenkinsfile also contains a command "docker-compose build", which builds this. Since my VM is connected to a swarm manager, The swarm manager builds and deploys the website for use. 
+6. Now the website is built and the user can interact with it. Any additions and creations will be notifed to the swarm manager and into my devlopement/worker node. This will add any of the changes into the database. 
 
 ## Testing
 
